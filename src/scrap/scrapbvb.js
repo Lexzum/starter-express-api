@@ -17,6 +17,7 @@ async function consultaBvb() {
         .trim();
       const image = $(elem).find(".of-image__picture>source").attr("srcset");
       const text = $(elem).find(".teaser__publisher-name-text").text().trim();
+      const pub_name = $(elem).find(".teaser__publisher-name-text").text().trim();
       const pub_image = $(elem)
         .find(
           ".teaser__publisher-name-image>.of-image>.of-image__picture>.of-image__img"
@@ -31,8 +32,10 @@ async function consultaBvb() {
         text,
         pub_image,
         time,
+        pub_name,
       });
     });
+    console.log(content);
     return content;
   } catch (error) {
     return console.log(error);
