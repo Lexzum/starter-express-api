@@ -49,7 +49,7 @@ async function leaderboardBL() {
     let content = [];
     $(".standings__row--link").each((i, elem) => {
       const team = $(elem).find(".standings__team-name").text().trim();
-      const image = $(elem).find(".of-image__img").attr("src");
+      const image = $(elem).find(".standings__team-logo>of-image>div>picture>img.of-image__img").attr("src");
       const gamesp = $(elem).find(".standings__cell-text--dimmed").eq(0).text().trim();
       const wins = $(elem).find(".standings__cell-text--dimmed").eq(1).text().trim();
       const draws = $(elem).find(".standings__cell-text--dimmed").eq(2).text().trim();
@@ -75,6 +75,8 @@ async function leaderboardBL() {
     return console.log(error);
   }
 }
+
+leaderboardBL()
 
  module.exports = {
   consultaBvb,
