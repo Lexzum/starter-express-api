@@ -49,6 +49,7 @@ async function leaderboardBL() {
     let content = [];
     $(".standings__row--link").each((i, elem) => {
       const team = $(elem).find(".standings__team-name").text().trim();
+      const image = $(elem).find(".of-image__img").attr("src");
       const gamesp = $(elem).find(".standings__cell-text--dimmed").eq(0).text().trim();
       const wins = $(elem).find(".standings__cell-text--dimmed").eq(1).text().trim();
       const draws = $(elem).find(".standings__cell-text--dimmed").eq(2).text().trim();
@@ -58,6 +59,7 @@ async function leaderboardBL() {
       const svg =  'https://onefootball.com' + $(elem).find(".of-image__img").attr("src")
       content.push({
         team,
+        image,
         gamesp,
         wins,
         draws,
