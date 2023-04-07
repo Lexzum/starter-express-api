@@ -7,6 +7,7 @@ router.get("/deportes", newpaperController.getDeportes);
 router.get("/actualidad", newpaperController.getPresent);
 router.get("/espectaculos", newpaperController.getShows);
 router.post("/login", newpaperController.postLogin)
-router.get("/bvb", bvbController.getBvb);
+router.get("/bvb/news", bvbController.getBvb);
+router.get("/bvb/leaderboard", bvbController.getLeaderboard);
 
 module.exports = router;
