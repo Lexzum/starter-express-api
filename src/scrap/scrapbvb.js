@@ -236,8 +236,8 @@ async function fixtureBL() {
 
          if (!matchesByDate.fixtures.includes({objHome,objAway})) {
           matchesByDate.fixtures.push(  {
-            fixtureH: objHome,
-            fixtureA: objAway
+            homeTeam: objHome,
+            awayTeam: objAway
           });
         } 
         
