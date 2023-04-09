@@ -192,8 +192,11 @@ async function fixtureBL(fecha) {
   );
 
   const $ = cheerio.load(response.data);
-
-  let content = [];
+  const date = $("h1").text().trim().split(" ").slice(0, 2).join(" ");
+  let content = {
+    date: date,
+    matches: [],
+  };
 
   $("match-date-header").each((index, el) => {
     const date = $(el).text().trim().split("  ");
@@ -229,10 +232,13 @@ async function fixtureBL(fecha) {
           });
         }
       });
-    content.push(matchesByDate);
+    
+    content.matches.push(matchesByDate);
+    
     //console.log(matchesByDate);
   });
-
+ 
+  
   return content;
 }
 
