@@ -186,69 +186,57 @@ async function matchesBL() {
   }
 }
 
-async function fixtureBL() {
-  //how use nextUntil
+async function fixtureBL(fecha) {
   const response = await axios.get(
-    "https://www.bundesliga.com/es/bundesliga/partidos/2022-2023/26"
+    "https://www.bundesliga.com/es/bundesliga/partidos/2022-2023/" + fecha
   );
-
 
   const $ = cheerio.load(response.data);
 
   let content = [];
 
   $("match-date-header").each((index, el) => {
-    const matchesByDate = {};
-    const date = $(el).text().trim();
-    matchesByDate.date = date;
-    matchesByDate.fixtures = [];
+    const date = $(el).text().trim().split("  ");
+    const matchesByDate = {
+      date: date[0] + " " + date[1],
+      hour: date[2],
+      fixtures: [],
+    };
 
-      //console.log($(el).nextUntil("match-date-header", "div.matchRow.elevation-t-card.ng-star-inserted").html());
-      //.nextUntil("match-date-header", "div.match-row")
-      $(el).nextUntil("match-date-header", "div.matchRow.elevation-t-card.ng-star-inserted")
+    $(el)
+      .nextUntil(
+        "match-date-header",
+        "div.matchRow.elevation-t-card.ng-star-inserted"
+      )
       .each((i, elem) => {
-        //console.log('a', $(el).html());
-        //const fixtureH = $(el).find("match-team[side='home']").text();
-       // const fixtureA = $(el).find("match-team[side='away']").text();
-       let objHome = {
-        team: "",
-        shortName: "",
-        logo: "",
-      };
-      let objAway = {
-        team: "",
-        shortName: "",
-        logo: "",
-      };
-      objHome.team = $(elem).find('match-team[side="home"]').text();
-      objHome.shortName = $(elem).find(".cell.home>.tlc").text();
-      objHome.score = $(elem)
-        .find(".cell.home>.score.ng-star-inserted")
-        .text();
-      objHome.logo = $(elem).find('match-team[side="home"] img').attr("src");
+        let homeTeam = {
+          name: $(elem).find('match-team[side="home"]').text(),
+          shortName: $(elem).find(".cell.home>.tlc").text(),
+          score: $(elem).find(".cell.home>.score.ng-star-inserted").text(),
+          logo: $(elem).find('match-team[side="home"] img').attr("src"),
+        };
+        let awayTeam = {
+          name: $(elem).find('match-team[side="away"]').text(),
+          shortName: $(elem).find(".cell.away>.tlc").text(),
+          score: $(elem).find(".cell.away>.score.ng-star-inserted").text(),
+          logo: $(elem).find('match-team[side="away"] img').attr("src"),
+        };
 
-      objAway.team = $(elem).find('match-team[side="away"]').text();
-      objAway.shortName = $(elem).find(".cell.away>.tlc").text();
-      objAway.score = $(elem)
-        .find(".cell.away>.score.ng-star-inserted")
-        .text();
-      objAway.logo = $(elem).find('match-team[side="away"] img').attr("src");
-
-         if (!matchesByDate.fixtures.includes({objHome,objAway})) {
-          matchesByDate.fixtures.push(  {
-            homeTeam: objHome,
-            awayTeam: objAway
+        if (!matchesByDate.fixtures.includes({ homeTeam, awayTeam })) {
+          matchesByDate.fixtures.push({
+            homeTeam: homeTeam,
+            awayTeam: awayTeam,
           });
-        } 
-        
+        }
       });
-      content.push(matchesByDate);
-      //console.log(matchesByDate);
+    content.push(matchesByDate);
+    //console.log(matchesByDate);
   });
 
- return content;
+  return content;
 }
 
+fixtureBL();
 module.exports = {
   consultaBvb,
   leaderboardBL,

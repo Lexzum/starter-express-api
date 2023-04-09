@@ -31,7 +31,7 @@ const getLeaderboard = async (req, res) => {
 
 const getFixtureBL = async (req, res) => {
   try {
-    const resultado = await fixtureBL();
+    const resultado = await fixtureBL(req.params.fecha);
     console.log(resultado);
 
     res.json(resultado);

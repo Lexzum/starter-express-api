@@ -9,7 +9,7 @@ router.get("/espectaculos", newpaperController.getShows);
 router.post("/login", newpaperController.postLogin)
 router.get("/bvb/news", bvbController.getBvb);
 router.get("/bvb/leaderboard", bvbController.getLeaderboard);
-router.get("/bvb/fixture", bvbController.getFixtureBL);
+router.get("/bvb/fixture/:fecha?", bvbController.getFixtureBL);
 
 
 module.exports = router;
