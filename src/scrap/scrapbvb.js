@@ -244,10 +244,9 @@ async function schedule() {
     const response = await axios.get("https://futbol-libre.org/agenda");
     const $ = cheerio.load(response.data);
     let content = [];
-    $("li.ES").each((index, elem) => {
-      
+    $("li.PE").each((index, elem) => {
       let pe = {
-        flag: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg',
+        flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
         match: $(elem)
           .find("a")
           .contents()
@@ -274,9 +273,9 @@ async function schedule() {
               .trim(),
             link: $(el).find("a").attr("href"),
           };
-          
-          pe.canales.push(canal)
-        })
+
+          pe.canales.push(canal);
+        });
       content.push(pe);
     });
     //console.log(content);
@@ -302,7 +301,6 @@ function getHour(hora) {
   // Retornar la hora en formato peruano de 12 horas
   return horaPeru;
 }
-
 
 module.exports = {
   consultaBvb,
