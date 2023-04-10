@@ -232,19 +232,81 @@ async function fixtureBL(fecha) {
           });
         }
       });
-    
+
     content.matches.push(matchesByDate);
-    
-    //console.log(matchesByDate);
   });
- 
-  
+
   return content;
 }
 
-fixtureBL();
+async function schedule() {
+  try {
+    const response = await axios.get("https://futbol-libre.org/agenda");
+    const $ = cheerio.load(response.data);
+    let content = [];
+    $("li.ES").each((index, elem) => {
+      
+      let pe = {
+        flag: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg',
+        match: $(elem)
+          .find("a")
+          .contents()
+          .filter(function () {
+            return this.nodeType === 3;
+          })
+          .first()
+          .text()
+          .trim(),
+        hour: getHour($(elem).find("a > .t").text().trim()),
+        canales: [],
+      };
+      $(elem)
+        .find("ul > .subitem1")
+        .each((i, el) => {
+          let canal = {
+            name: $(el)
+              .find("a")
+              .contents()
+              .filter(function () {
+                return this.nodeType === 3;
+              })
+              .text()
+              .trim(),
+            link: $(el).find("a").attr("href"),
+          };
+          
+          pe.canales.push(canal)
+        })
+      content.push(pe);
+    });
+    //console.log(content);
+    return content;
+  } catch (error) {
+    return console.log(error);
+  }
+}
+
+function getHour(hora) {
+  // Crear objeto Date con la hora en formato de 24 horas
+  let fecha = new Date(`2000/01/01 ${hora}`);
+  // Obtener la diferencia horaria entre España y Perú en minutos
+  let diferenciaHoraria = -360;
+  // Sumar la diferencia horaria a la hora en España
+  fecha.setMinutes(fecha.getMinutes() + diferenciaHoraria);
+  // Convertir la hora a formato de 12 horas
+  let horaPeru = fecha.toLocaleString("en-US", {
+    hour: "numeric",
+    hour12: true,
+    minute: "numeric",
+  });
+  // Retornar la hora en formato peruano de 12 horas
+  return horaPeru;
+}
+
+
 module.exports = {
   consultaBvb,
   leaderboardBL,
   fixtureBL,
+  schedule,
 };

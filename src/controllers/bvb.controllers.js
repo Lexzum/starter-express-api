@@ -1,4 +1,4 @@
-const { consultaBvb, leaderboardBL, fixtureBL } = require("../scrap/scrapbvb");
+const { consultaBvb, leaderboardBL, fixtureBL, schedule } = require("../scrap/scrapbvb");
 
 const getBvb = async (req, res) => {
   try {
@@ -42,10 +42,24 @@ const getFixtureBL = async (req, res) => {
   }
 };
 
+const getSchedule = async (req, res) => {
+  try {
+    const resultado = await schedule();
+    console.log(resultado);
+
+    res.json(resultado);
+    res.status(200);
+  } catch (error) {
+    res.status(500);
+    res.send(error.message);
+  }
+};
+
 
 
 module.exports = {
   getBvb,
   getLeaderboard,
   getFixtureBL,
+  getSchedule,
 };
