@@ -239,7 +239,7 @@ async function fixtureBL(fecha) {
   return content;
 }
 
-async function schedule() {
+async function schedulea() {
   try {
     const response = await axios.get("https://futbol-libre.org/agenda");
     const $ = cheerio.load(response.data);
@@ -247,7 +247,7 @@ async function schedule() {
 
     //cha => chanpions league
     //pe => peru
-    $("li.CHA").each((index, elem) => {
+    $("li.CHA").each(async (index, elem) => {
       let pe = {
         flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
         match: $(elem)
@@ -262,9 +262,10 @@ async function schedule() {
         hour: getHour($(elem).find("a > .t").text().trim()),
         canales: [],
       };
-      $(elem)
+
+      /* $(elem)
         .find("ul > .subitem1")
-        .each((i, el) => {
+        .each(async (i, el) => {
           let canal = {
             name: $(el)
               .find("a")
@@ -275,16 +276,108 @@ async function schedule() {
               .text()
               .trim(),
             link: $(el).find("a").attr("href"),
+            streamUrl: await streamUrl($(el).find("a").attr("href")),
           };
 
           pe.canales.push(canal);
-        });
+        }); */
+
+        const subitems = $(elem).find("ul > .subitem1");
+        for (let i = 0; i < subitems.length; i++) {
+          const el = subitems[i];
+          let canal = {
+            name: $(el)
+              .find("a")
+              .contents()
+              .filter(function () {
+                return this.nodeType === 3;
+              })
+              .text()
+              .trim(),
+            link: $(el).find("a").attr("href"),
+            streamUrl: await streamUrl($(el).find("a").attr("href")),
+          };
+          pe.canales.push(canal);
+        }
+
       content.push(pe);
     });
     //console.log(content);
     return content;
   } catch (error) {
     return console.log(error);
+  }
+}
+
+async function schedule() {
+  try {
+    const response = await axios.get("https://futbol-libre.org/agenda");
+    const $ = cheerio.load(response.data);
+    let content = [];
+
+    //cha => chanpions league
+    //pe => peru
+
+    const cha =  $("li.CHA");
+    for (let i = 0; i < cha.length; i++) {
+      const element = cha[i];
+      let pe = {
+        flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
+        match: $(element)
+          .find("a")
+          .contents()
+          .filter(function () {
+            return this.nodeType === 3;
+          })
+          .first()
+          .text()
+          .trim(),
+        hour: getHour($(element).find("a > .t").text().trim()),
+        canales: [],
+      }
+    
+
+    /* $("li.CHA").each(async(index, elem) => {
+      let pe = {
+        flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
+        match: $(elem)
+          .find("a")
+          .contents()
+          .filter(function () {
+            return this.nodeType === 3;
+          })
+          .first()
+          .text()
+          .trim(),
+        hour: getHour($(elem).find("a > .t").text().trim()),
+        canales: [],
+      }; */
+
+      const subitems = $(element).find("ul > .subitem1");
+      for (let i = 0; i < subitems.length; i++) {
+        const el = subitems[i];
+        let canal = {
+          name: $(el)
+            .find("a")
+            .contents()
+            .filter(function () {
+              return this.nodeType === 3;
+            })
+            .text()
+            .trim(),
+          link: $(el).find("a").attr("href"),
+          streamUrl: await streamUrl($(el).find("a").attr("href")),
+        };
+
+        pe.canales.push(canal);
+      }
+
+      content.push(pe);
+    };
+
+    return content;
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -303,6 +396,17 @@ function getHour(hora) {
   });
   // Retornar la hora en formato peruano de 12 horas
   return horaPeru;
+}
+
+async function streamUrl(link) {
+  try {
+    const response = await axios.get(link);
+    const $ = cheerio.load(response.data);
+    console.log($("iframe").attr("src"));
+    return $("iframe").attr("src");
+  } catch (error) {
+    return "";
+  }
 }
 
 module.exports = {
