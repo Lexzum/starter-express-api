@@ -244,7 +244,10 @@ async function schedule() {
     const response = await axios.get("https://futbol-libre.org/agenda");
     const $ = cheerio.load(response.data);
     let content = [];
-    $("li.PE").each((index, elem) => {
+
+    //cha => chanpions league
+    //pe => peru
+    $("li.CHA").each((index, elem) => {
       let pe = {
         flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
         match: $(elem)
