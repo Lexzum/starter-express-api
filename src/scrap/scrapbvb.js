@@ -19,8 +19,9 @@ async function consultaBvb() {
         .trim();
       //desc class ".NewsTeaserV2_teaser__preview__rQSgt"
       const image = $(elem)
-        .find(".ImageWithSets_of-image__img__o1FHK.teaser__img")
-        .attr("src");
+        .find(".ImageWithSets_of-image__picture__IHP7O > source")
+        .last()
+        .attr("srcset");
       const pub_name = $(elem).find("footer a span").text().trim();
       const pub_image = $(elem).find("footer a div img").attr("src");
       const time = $(elem).find("footer a time").text().trim();
