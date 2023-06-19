@@ -1,4 +1,3 @@
-const { Axios } = require("axios");
 const cheerio = require("cheerio");
 const axios = require("axios").default;
 
@@ -8,25 +7,23 @@ async function consultaBvb() {
       "https://onefootball.com/es/equipo/borussia-dortmund-155"
     );
     const $ = cheerio.load(response.data);
+    //console.log($(".NewsTeaserV2_teaser__9xVVz").html());
     let content = [];
-    $(".teaser__link").each((i, elem) => {
-      const title = $(elem).find(".teaser__title").text();
+    $(".NewsTeaserV2_teaser__9xVVz").each((i, elem) => {
+      const title = $(elem).find(".NewsTeaserV2_teaser__title__41fg5").text();
+      //const title = $(elem).text();
       const description = $(elem)
-        .find(".teaser__preview")
+        .find(".NewsTeaserV2_teaser__preview__rQSgt")
         .text()
         .replace(/\n/g, " ")
         .trim();
-      const image = $(elem).find(".of-image__picture>source").attr("srcset");
-      const pub_name = $(elem)
-        .find(".teaser__publisher-name-text")
-        .text()
-        .trim();
-      const pub_image = $(elem)
-        .find(
-          ".teaser__publisher-name-image>.of-image>.of-image__picture>.of-image__img"
-        )
+      //desc class ".NewsTeaserV2_teaser__preview__rQSgt"
+      const image = $(elem)
+        .find(".ImageWithSets_of-image__img__o1FHK.teaser__img")
         .attr("src");
-      const time = $(elem).find(".publisher__time").text().trim();
+      const pub_name = $(elem).find("footer a span").text().trim();
+      const pub_image = $(elem).find("footer a div img").attr("src");
+      const time = $(elem).find("footer a time").text().trim();
       ("");
       content.push({
         title,
@@ -282,23 +279,23 @@ async function schedulea() {
           pe.canales.push(canal);
         }); */
 
-        const subitems = $(elem).find("ul > .subitem1");
-        for (let i = 0; i < subitems.length; i++) {
-          const el = subitems[i];
-          let canal = {
-            name: $(el)
-              .find("a")
-              .contents()
-              .filter(function () {
-                return this.nodeType === 3;
-              })
-              .text()
-              .trim(),
-            link: $(el).find("a").attr("href"),
-            streamUrl: await streamUrl($(el).find("a").attr("href")),
-          };
-          pe.canales.push(canal);
-        }
+      const subitems = $(elem).find("ul > .subitem1");
+      for (let i = 0; i < subitems.length; i++) {
+        const el = subitems[i];
+        let canal = {
+          name: $(el)
+            .find("a")
+            .contents()
+            .filter(function () {
+              return this.nodeType === 3;
+            })
+            .text()
+            .trim(),
+          link: $(el).find("a").attr("href"),
+          streamUrl: await streamUrl($(el).find("a").attr("href")),
+        };
+        pe.canales.push(canal);
+      }
 
       content.push(pe);
     });
@@ -318,7 +315,7 @@ async function schedule() {
     //cha => chanpions league
     //pe => peru
 
-    const cha =  $("li.CHA");
+    const cha = $("li.CHA");
     for (let i = 0; i < cha.length; i++) {
       const element = cha[i];
       let pe = {
@@ -334,10 +331,9 @@ async function schedule() {
           .trim(),
         hour: getHour($(element).find("a > .t").text().trim()),
         canales: [],
-      }
-    
+      };
 
-    /* $("li.CHA").each(async(index, elem) => {
+      /* $("li.CHA").each(async(index, elem) => {
       let pe = {
         flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
         match: $(elem)
@@ -373,7 +369,7 @@ async function schedule() {
       }
 
       content.push(pe);
-    };
+    }
 
     return content;
   } catch (error) {
