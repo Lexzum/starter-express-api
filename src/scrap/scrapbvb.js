@@ -7,34 +7,41 @@ async function consultaBvb() {
       "https://onefootball.com/es/equipo/borussia-dortmund-155"
     );
     const $ = cheerio.load(response.data);
-    //console.log($(".NewsTeaserV2_teaser__9xVVz").html());
+    //console.log($(".Gallery_grid__WPr91.Gallery_gallery__grid__QXQRr").find('article > a > .NewsTeaserV2_teaser__title__9dpbH') .html());
     let content = [];
-    $(".NewsTeaserV2_teaser__9xVVz").each((i, elem) => {
-      const title = $(elem).find(".NewsTeaserV2_teaser__title__41fg5").text();
-      //const title = $(elem).text();
-      const description = $(elem)
-        .find(".NewsTeaserV2_teaser__preview__rQSgt")
-        .text()
-        .replace(/\n/g, " ")
-        .trim();
-      //desc class ".NewsTeaserV2_teaser__preview__rQSgt"
-      const image = $(elem)
-        .find(".ImageWithSets_of-image__picture__IHP7O > source")
-        .last()
-        .attr("srcset");
-      const pub_name = $(elem).find("footer a span").text().trim();
-      const pub_image = $(elem).find("footer a div img").attr("src");
-      const time = $(elem).find("footer a time").text().trim();
-      ("");
-      content.push({
-        title,
-        description,
-        image,
-        pub_image,
-        time,
-        pub_name,
+    $(".Gallery_grid__WPr91.Gallery_gallery__grid__QXQRr")
+      .find("article")
+      .each((i, elem) => {
+        //const title = $(elem).find(".NewsTeaserV2_teaser__title__41fg5").text();
+        const title = $(elem)
+          .find("a > .NewsTeaserV2_teaser__title__9dpbH")
+          .text();
+        //console.log(title);
+        const description = $(elem)
+          //.find(".NewsTeaserV2_teaser__preview__rQSgt")
+          .find(".NewsTeaserV2_teaser__preview__KB0zI")
+          .text()
+          .replace(/\n/g, " ")
+          .trim();
+        //desc class ".NewsTeaserV2_teaser__preview__rQSgt"
+        const image = $(elem)
+          //.find(".ImageWithSets_of-image__picture__IHP7O > source")
+          .find(".ImageWithSets_of-image__picture__4hzsN > source")
+          .last()
+          .attr("srcset");
+        const pub_name = $(elem).find("footer a span").text().trim();
+        const pub_image = $(elem).find("footer a div img").attr("src");
+        const time = $(elem).find("footer a time").text().trim();
+        ("");
+        content.push({
+          title,
+          description,
+          image,
+          pub_image,
+          time,
+          pub_name,
+        });
       });
-    });
     console.log(content);
     return content;
   } catch (error) {
