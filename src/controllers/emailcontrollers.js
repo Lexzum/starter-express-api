@@ -5,7 +5,10 @@ const sendMail = async (req, res) => {
     await sendEmail(req, res);
     //console.log(resultado);
 
-    res.json('Email send success');
+    res.json({
+      to: req.body.email,
+      message: "Email send success",
+    });
     res.status(200);
   } catch (error) {
     res.status(500);
@@ -17,8 +20,9 @@ const sendEmail = async (req, res) => {
   const { email, asunto, contenido } = req.body;
 
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
+    /* host: "smtp.gmail.com",
+    port: 587, */
+    service: "gmail",
     auth: {
       user: "lexzum10@gmail.com",
       pass: "iugwigicuwqwwwzk",
@@ -27,17 +31,18 @@ const sendEmail = async (req, res) => {
 
   const info = await transporter.sendMail({
     from: email,
-    to: "lexzum10@gmail.com",
+    to: "lexzum10o@gmail.com",
     subject: asunto,
     text: contenido,
   });
+
+  console.log(info);
 
   return info;
 };
 
 module.exports = {
-  sendMail
-}
-
+  sendMail,
+};
 
 //main().catch(console.error);
