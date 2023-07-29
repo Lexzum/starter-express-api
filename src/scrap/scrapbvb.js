@@ -56,8 +56,12 @@ async function leaderboardBL() {
     );
     const $ = cheerio.load(response.data);
     let content = [];
-    $(".standings__row--link").each((i, elem) => {
-      const team = $(elem).find(".standings__team-name").text().trim();
+    console.log($(".xpa-switch-article > ").html());
+    $(".standings__row.standings__row--link").each((i, elem) => {
+      const team = $(elem)
+        .find(".title-7-medium.standings__team-name")
+        .text()
+        .trim();
       const image = $(elem)
         .find(".standings__team-logo>of-image>div>picture>img.of-image__img")
         .attr("src");
@@ -105,8 +109,8 @@ async function leaderboardBL() {
         svg,
       });
     });
-    console.log(content[1]);
-    return content;
+    //console.log(content[1]);
+    //return content;
   } catch (error) {
     return console.log(error);
   }
@@ -412,6 +416,8 @@ async function streamUrl(link) {
     return "";
   }
 }
+
+//leaderboardBL();
 
 module.exports = {
   consultaBvb,
