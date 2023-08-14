@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const axios = require("axios").default;
+const url = require("url");
 
 async function consultaBvb() {
   try {
@@ -52,51 +53,40 @@ async function consultaBvb() {
 async function leaderboardBL() {
   try {
     const response = await axios.get(
-      "https://onefootball.com/es/competicion/bundesliga-1/clasificacion"
+      "https://www.bundesliga.com/es/bundesliga/clasificacion"
     );
     const $ = cheerio.load(response.data);
+    const base = "https://assets.bundesliga.com";
     let content = [];
-    console.log($(".xpa-switch-article > ").html());
-    $(".standings__row.standings__row--link").each((i, elem) => {
+    /* console.log($("tr.ng-star-inserted td.logo > a.logolink > clublogo").html()); */
+    $("tr.ng-star-inserted").each((i, elem) => {
       const team = $(elem)
-        .find(".title-7-medium.standings__team-name")
+        .find("td.team > div > span:nth-child(3)")
         .text()
         .trim();
-      const image = $(elem)
-        .find(".standings__team-logo>of-image>div>picture>img.of-image__img")
-        .attr("src");
-      const gamesp = $(elem)
-        .find(".standings__cell-text--dimmed")
-        .eq(0)
-        .text()
-        .trim();
-      const wins = $(elem)
-        .find(".standings__cell-text--dimmed")
-        .eq(1)
-        .text()
-        .trim();
-      const draws = $(elem)
-        .find(".standings__cell-text--dimmed")
-        .eq(2)
-        .text()
-        .trim();
-      const losses = $(elem)
-        .find(".standings__cell-text--dimmed")
-        .eq(3)
-        .text()
-        .trim();
+      /* const image = $(elem)
+        .find("td.logo > a.logolink > clublogo img")
+        .attr("src"); */
+      const image = `https://assets.bundesliga.com/tachyon/sites/2/2021/08/${
+        i == 3
+          ? "Union-Berlin"
+          : i == 9
+          ? "Moenchengladbach"
+          : i == 10
+          ? "Koeln"
+          : team
+      }.png?fit=70,70`;
+      const gamesp = $(elem).find(".matches").text().trim();
+      const wins = $(elem).find(".wins").text().trim();
+      const draws = $(elem).find(".draws").text().trim();
+      const losses = $(elem).find(".losses").text().trim();
       const goald = $(elem)
-        .find(".standings__cell-text--dimmed")
-        .eq(4)
+        .find(".difference")
+
         .text()
         .trim();
-      const points = $(elem)
-        .find(".standings__cell.standings__cell--numeric>span")
-        .eq(6)
-        .text()
-        .trim();
-      const svg =
-        "https://onefootball.com" + $(elem).find(".of-image__img").attr("src");
+      const points = $(elem).find(".pts").text().trim();
+
       content.push({
         team,
         image,
@@ -106,11 +96,10 @@ async function leaderboardBL() {
         losses,
         goald,
         points,
-        svg,
       });
     });
     //console.log(content[1]);
-    //return content;
+    return content;
   } catch (error) {
     return console.log(error);
   }
