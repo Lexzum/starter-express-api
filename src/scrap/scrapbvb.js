@@ -211,7 +211,7 @@ async function fixtureBL(fecha) {
       )
       .each((i, elem) => {
         let homeTeam = {
-          name: $(elem).find('match-team[side="home"]').text(),
+          name: $(elem).find('match-team[side="home"]').first().text(),
           shortName: $(elem).find(".cell.home>.tlc").text(),
           score: $(elem).find(".cell.home>.score.ng-star-inserted").text(),
           logo: $(elem).find('match-team[side="home"] img').attr("src"),
