@@ -211,13 +211,13 @@ async function fixtureBL(fecha) {
       )
       .each((i, elem) => {
         let homeTeam = {
-          name: $(elem).find('match-team[side="home"]').first().text(),
+          name: $(elem).find('match-team[side="home"] > div > ').first().text(),
           shortName: $(elem).find(".cell.home>.tlc").text(),
           score: $(elem).find(".cell.home>.score.ng-star-inserted").text(),
           logo: $(elem).find('match-team[side="home"] img').attr("src"),
         };
         let awayTeam = {
-          name: $(elem).find('match-team[side="away"]').text(),
+          name: $(elem).find('match-team[side="away"]  > div >').first().text(),
           shortName: $(elem).find(".cell.away>.tlc").text(),
           score: $(elem).find(".cell.away>.score.ng-star-inserted").text(),
           logo: $(elem).find('match-team[side="away"] img').attr("src"),
