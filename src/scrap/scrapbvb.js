@@ -186,7 +186,7 @@ async function matchesBL() {
 
 async function fixtureBL(fecha) {
   const response = await axios.get(
-    "https://www.bundesliga.com/es/bundesliga/partidos/2022-2023/" + fecha
+    "https://www.bundesliga.com/es/bundesliga/partidos/2023-2024/" + fecha
   );
 
   const $ = cheerio.load(response.data);
