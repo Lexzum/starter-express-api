@@ -86,6 +86,7 @@ async function leaderboardBL() {
         .text()
         .trim();
       const points = $(elem).find(".pts").text().trim();
+      const tend = $(elem).find(".tend > span").attr('class')
 
       content.push({
         team,
@@ -96,6 +97,7 @@ async function leaderboardBL() {
         losses,
         goald,
         points,
+        tend,
       });
     });
     //console.log(content[1]);
