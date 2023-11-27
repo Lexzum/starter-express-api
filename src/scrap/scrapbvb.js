@@ -68,11 +68,11 @@ async function leaderboardBL() {
         .find("td.logo > a.logolink > clublogo img")
         .attr("src"); */
       const image = `https://assets.bundesliga.com/tachyon/sites/2/2021/08/${
-        i == 3
+        team == 'Union Berlin'
           ? "Union-Berlin"
-          : i == 9
+          : team == "M'gladbach"
           ? "Moenchengladbach"
-          : i == 10
+          : team == "Köln"
           ? "Koeln"
           : team
       }.png?fit=70,70`;
