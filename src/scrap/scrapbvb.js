@@ -1,92 +1,92 @@
-const cheerio = require("cheerio");
-const axios = require("axios").default;
-const url = require("url");
+const cheerio = require('cheerio')
+const axios = require('axios').default
+const url = require('url')
 
 async function consultaBvb() {
   try {
     const response = await axios.get(
-      "https://onefootball.com/es/equipo/borussia-dortmund-155"
-    );
-    const $ = cheerio.load(response.data);
+      'https://onefootball.com/es/equipo/borussia-dortmund-155'
+    )
+    const $ = cheerio.load(response.data)
     //console.log($(".Gallery_grid__WPr91.Gallery_gallery__grid__QXQRr").find('article > a > .NewsTeaserV2_teaser__title__9dpbH') .html());
-    let content = [];
-    $(".Gallery_grid__WPr91.Gallery_gallery__grid__QXQRr")
-      .find("article")
+    let content = []
+    $('.Gallery_grid__WPr91.Gallery_gallery__grid__QXQRr')
+      .find('article')
       .each((i, elem) => {
         //const title = $(elem).find(".NewsTeaserV2_teaser__title__41fg5").text();
         const title = $(elem)
-          .find("a > .NewsTeaserV2_teaser__title__9dpbH")
-          .text();
+          .find('a > .NewsTeaser_teaser__title__OsMxr')
+          .text()
         //console.log(title);
         const description = $(elem)
           //.find(".NewsTeaserV2_teaser__preview__rQSgt")
-          .find(".NewsTeaserV2_teaser__preview__KB0zI")
+          .find('.NewsTeaser_teaser__preview__ZRFyi')
           .text()
-          .replace(/\n/g, " ")
-          .trim();
+          .replace(/\n/g, ' ')
+          .trim()
         //desc class ".NewsTeaserV2_teaser__preview__rQSgt"
         const image = $(elem)
           //.find(".ImageWithSets_of-image__picture__IHP7O > source")
-          .find(".ImageWithSets_of-image__picture__4hzsN > source")
+          .find('.ImageWithSets_of-image__picture__4hzsN > source')
           .last()
-          .attr("srcset");
-        const pub_name = $(elem).find("footer a span").text().trim();
-        const pub_image = $(elem).find("footer a div img").attr("src");
-        const time = $(elem).find("footer a time").text().trim();
-        ("");
+          .attr('srcset')
+        const pub_name = $(elem).find('footer a span').text().trim()
+        const pub_image = $(elem).find('footer a div img').attr('src')
+        const time = $(elem).find('footer a time').text().trim()
+        ;('')
         content.push({
           title,
           description,
           image,
           pub_image,
           time,
-          pub_name,
-        });
-      });
-    console.log(content);
-    return content;
+          pub_name
+        })
+      })
+    console.log(content)
+    return content
   } catch (error) {
-    return console.log(error);
+    return console.log(error)
   }
 }
 
 async function leaderboardBL() {
   try {
     const response = await axios.get(
-      "https://www.bundesliga.com/es/bundesliga/clasificacion"
-    );
-    const $ = cheerio.load(response.data);
-    const base = "https://assets.bundesliga.com";
-    let content = [];
+      'https://www.bundesliga.com/es/bundesliga/clasificacion'
+    )
+    const $ = cheerio.load(response.data)
+    const base = 'https://assets.bundesliga.com'
+    let content = []
     /* console.log($("tr.ng-star-inserted td.logo > a.logolink > clublogo").html()); */
-    $("tr.ng-star-inserted").each((i, elem) => {
+    $('tr.ng-star-inserted').each((i, elem) => {
       const team = $(elem)
-        .find("td.team > div > span:nth-child(3)")
+        .find('td.team > div > span:nth-child(3)')
         .text()
-        .trim();
+        .trim()
       /* const image = $(elem)
         .find("td.logo > a.logolink > clublogo img")
         .attr("src"); */
       const image = `https://assets.bundesliga.com/tachyon/sites/2/2021/08/${
         team == 'Union Berlin'
-          ? "Union-Berlin"
+          ? 'Union-Berlin'
           : team == "M'gladbach"
-          ? "Moenchengladbach"
-          : team == "Köln"
-          ? "Koeln"
+          ? 'Moenchengladbach'
+          : team == 'Köln'
+          ? 'Koeln'
           : team
-      }.png?fit=70,70`;
-      const gamesp = $(elem).find(".matches").text().trim();
-      const wins = $(elem).find(".wins").text().trim();
-      const draws = $(elem).find(".draws").text().trim();
-      const losses = $(elem).find(".losses").text().trim();
+      }.png?fit=70,70`
+      const gamesp = $(elem).find('.matches').text().trim()
+      const wins = $(elem).find('.wins').text().trim()
+      const draws = $(elem).find('.draws').text().trim()
+      const losses = $(elem).find('.losses').text().trim()
       const goald = $(elem)
-        .find(".difference")
+        .find('.difference')
 
         .text()
-        .trim();
-      const points = $(elem).find(".pts").text().trim();
-      const tend = $(elem).find(".tend > span").attr('class')
+        .trim()
+      const points = $(elem).find('.pts').text().trim()
+      const tend = $(elem).find('.tend > span').attr('class')
 
       content.push({
         team,
@@ -97,34 +97,34 @@ async function leaderboardBL() {
         losses,
         goald,
         points,
-        tend,
-      });
-    });
+        tend
+      })
+    })
     //console.log(content[1]);
-    return content;
+    return content
   } catch (error) {
-    return console.log(error);
+    return console.log(error)
   }
 }
 
 async function matchesBL() {
   try {
     const response = await axios.get(
-      "https://www.bundesliga.com/es/bundesliga/partidos/2022-2023/26"
-    );
-    const $ = cheerio.load(response.data);
-    let mf = [];
-    let matches = [];
+      'https://www.bundesliga.com/es/bundesliga/partidos/2022-2023/26'
+    )
+    const $ = cheerio.load(response.data)
+    let mf = []
+    let matches = []
 
-    let isMatching = false;
+    let isMatching = false
 
-    $("match-date-header").each((index, elem) => {
-      const array = $(elem).find(".day").text().trim().split("  ");
+    $('match-date-header').each((index, elem) => {
+      const array = $(elem).find('.day').text().trim().split('  ')
       const objheader = {
         day: array[0],
         date: array[1],
-        matchFixture: [],
-      };
+        matchFixture: []
+      }
 
       //;
       //obj.hour =
@@ -134,36 +134,36 @@ async function matchesBL() {
       //console.log('hola');
       // const $matchFixtures = $(elem).nextUntil(".match-date-header", ".");
 
-      $(".matchFixture").each((i, elem) => {
+      $('.matchFixture').each((i, elem) => {
         //let obj = {};
         let objHome = {
-          team: "",
-          shortName: "",
-          logo: "",
-        };
+          team: '',
+          shortName: '',
+          logo: ''
+        }
         let objAway = {
-          team: "",
-          shortName: "",
-          logo: "",
-        };
-        objHome.team = $(elem).find('match-team[side="home"]').text();
-        objHome.shortName = $(elem).find(".cell.home>.tlc").text();
+          team: '',
+          shortName: '',
+          logo: ''
+        }
+        objHome.team = $(elem).find('match-team[side="home"]').text()
+        objHome.shortName = $(elem).find('.cell.home>.tlc').text()
         objHome.score = $(elem)
-          .find(".cell.home>.score.ng-star-inserted")
-          .text();
-        objHome.logo = $(elem).find('match-team[side="home"] img').attr("src");
+          .find('.cell.home>.score.ng-star-inserted')
+          .text()
+        objHome.logo = $(elem).find('match-team[side="home"] img').attr('src')
 
-        objAway.team = $(elem).find('match-team[side="away"]').text();
-        objAway.shortName = $(elem).find(".cell.away>.tlc").text();
+        objAway.team = $(elem).find('match-team[side="away"]').text()
+        objAway.shortName = $(elem).find('.cell.away>.tlc').text()
         objAway.score = $(elem)
-          .find(".cell.away>.score.ng-star-inserted")
-          .text();
-        objAway.logo = $(elem).find('match-team[side="away"] img').attr("src");
+          .find('.cell.away>.score.ng-star-inserted')
+          .text()
+        objAway.logo = $(elem).find('match-team[side="away"] img').attr('src')
 
         const obj = {
           objHome,
-          objAway,
-        };
+          objAway
+        }
         //return obj;
 
         /*console.log({
@@ -173,95 +173,95 @@ async function matchesBL() {
 
         //console.log(matches.matchFixture);
         if (i === 0) {
-          objheader.matchFixture[index].push(obj);
+          objheader.matchFixture[index].push(obj)
         }
-      });
+      })
 
-      console.log(objheader.matchFixture);
-    });
+      console.log(objheader.matchFixture)
+    })
 
     //return content;
   } catch (error) {
-    return console.log("gaa" + error);
+    return console.log('gaa' + error)
   }
 }
 
 async function fixtureBL(fecha) {
   const response = await axios.get(
-    "https://www.bundesliga.com/es/bundesliga/partidos/2023-2024/" + fecha
-  );
+    'https://www.bundesliga.com/es/bundesliga/partidos/2023-2024/' + fecha
+  )
 
-  const $ = cheerio.load(response.data);
-  const date = $("h1").text().trim().split(" ").slice(0, 2).join(" ");
+  const $ = cheerio.load(response.data)
+  const date = $('h1').text().trim().split(' ').slice(0, 2).join(' ')
   let content = {
     date: date,
-    matches: [],
-  };
+    matches: []
+  }
 
-  $("match-date-header").each((index, el) => {
-    const date = $(el).text().trim().split("  ");
+  $('match-date-header').each((index, el) => {
+    const date = $(el).text().trim().split('  ')
     const matchesByDate = {
-      date: date[0] + " " + date[1],
+      date: date[0] + ' ' + date[1],
       hour: date[2],
-      fixtures: [],
-    };
+      fixtures: []
+    }
 
     $(el)
       .nextUntil(
-        "match-date-header",
-        "div.matchRow.elevation-t-card.ng-star-inserted"
+        'match-date-header',
+        'div.matchRow.elevation-t-card.ng-star-inserted'
       )
       .each((i, elem) => {
         let homeTeam = {
           name: $(elem).find('match-team[side="home"] > div > ').first().text(),
-          shortName: $(elem).find(".cell.home>.tlc").text(),
-          score: $(elem).find(".cell.home>.score.ng-star-inserted").text(),
-          logo: $(elem).find('match-team[side="home"] img').attr("src"),
-        };
+          shortName: $(elem).find('.cell.home>.tlc').text(),
+          score: $(elem).find('.cell.home>.score.ng-star-inserted').text(),
+          logo: $(elem).find('match-team[side="home"] img').attr('src')
+        }
         let awayTeam = {
           name: $(elem).find('match-team[side="away"]  > div >').first().text(),
-          shortName: $(elem).find(".cell.away>.tlc").text(),
-          score: $(elem).find(".cell.away>.score.ng-star-inserted").text(),
-          logo: $(elem).find('match-team[side="away"] img').attr("src"),
-        };
+          shortName: $(elem).find('.cell.away>.tlc').text(),
+          score: $(elem).find('.cell.away>.score.ng-star-inserted').text(),
+          logo: $(elem).find('match-team[side="away"] img').attr('src')
+        }
 
         if (!matchesByDate.fixtures.includes({ homeTeam, awayTeam })) {
           matchesByDate.fixtures.push({
             homeTeam: homeTeam,
-            awayTeam: awayTeam,
-          });
+            awayTeam: awayTeam
+          })
         }
-      });
+      })
 
-    content.matches.push(matchesByDate);
-  });
+    content.matches.push(matchesByDate)
+  })
 
-  return content;
+  return content
 }
 
 async function schedulea() {
   try {
-    const response = await axios.get("https://futbol-libre.org/agenda");
-    const $ = cheerio.load(response.data);
-    let content = [];
+    const response = await axios.get('https://futbol-libre.org/agenda')
+    const $ = cheerio.load(response.data)
+    let content = []
 
     //cha => chanpions league
     //pe => peru
-    $("li.CHA").each(async (index, elem) => {
+    $('li.CHA').each(async (index, elem) => {
       let pe = {
-        flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
+        flag: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg',
         match: $(elem)
-          .find("a")
+          .find('a')
           .contents()
           .filter(function () {
-            return this.nodeType === 3;
+            return this.nodeType === 3
           })
           .first()
           .text()
           .trim(),
-        hour: getHour($(elem).find("a > .t").text().trim()),
-        canales: [],
-      };
+        hour: getHour($(elem).find('a > .t').text().trim()),
+        canales: []
+      }
 
       /* $(elem)
         .find("ul > .subitem1")
@@ -282,59 +282,59 @@ async function schedulea() {
           pe.canales.push(canal);
         }); */
 
-      const subitems = $(elem).find("ul > .subitem1");
+      const subitems = $(elem).find('ul > .subitem1')
       for (let i = 0; i < subitems.length; i++) {
-        const el = subitems[i];
+        const el = subitems[i]
         let canal = {
           name: $(el)
-            .find("a")
+            .find('a')
             .contents()
             .filter(function () {
-              return this.nodeType === 3;
+              return this.nodeType === 3
             })
             .text()
             .trim(),
-          link: $(el).find("a").attr("href"),
-          streamUrl: await streamUrl($(el).find("a").attr("href")),
-        };
-        pe.canales.push(canal);
+          link: $(el).find('a').attr('href'),
+          streamUrl: await streamUrl($(el).find('a').attr('href'))
+        }
+        pe.canales.push(canal)
       }
 
-      content.push(pe);
-    });
+      content.push(pe)
+    })
     //console.log(content);
-    return content;
+    return content
   } catch (error) {
-    return console.log(error);
+    return console.log(error)
   }
 }
 
 async function schedule() {
   try {
-    const response = await axios.get("https://futbol-libre.org/agenda");
-    const $ = cheerio.load(response.data);
-    let content = [];
+    const response = await axios.get('https://futbol-libre.org/agenda')
+    const $ = cheerio.load(response.data)
+    let content = []
 
     //cha => chanpions league
     //pe => peru
 
-    const cha = $("li.CHA");
+    const cha = $('li.CHA')
     for (let i = 0; i < cha.length; i++) {
-      const element = cha[i];
+      const element = cha[i]
       let pe = {
-        flag: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg",
+        flag: 'https://upload.wikimedia.org/wikipedia/commons/c/cf/Flag_of_Peru.svg',
         match: $(element)
-          .find("a")
+          .find('a')
           .contents()
           .filter(function () {
-            return this.nodeType === 3;
+            return this.nodeType === 3
           })
           .first()
           .text()
           .trim(),
-        hour: getHour($(element).find("a > .t").text().trim()),
-        canales: [],
-      };
+        hour: getHour($(element).find('a > .t').text().trim()),
+        canales: []
+      }
 
       /* $("li.CHA").each(async(index, elem) => {
       let pe = {
@@ -352,59 +352,59 @@ async function schedule() {
         canales: [],
       }; */
 
-      const subitems = $(element).find("ul > .subitem1");
+      const subitems = $(element).find('ul > .subitem1')
       for (let i = 0; i < subitems.length; i++) {
-        const el = subitems[i];
+        const el = subitems[i]
         let canal = {
           name: $(el)
-            .find("a")
+            .find('a')
             .contents()
             .filter(function () {
-              return this.nodeType === 3;
+              return this.nodeType === 3
             })
             .text()
             .trim(),
-          link: $(el).find("a").attr("href"),
-          streamUrl: await streamUrl($(el).find("a").attr("href")),
-        };
+          link: $(el).find('a').attr('href'),
+          streamUrl: await streamUrl($(el).find('a').attr('href'))
+        }
 
-        pe.canales.push(canal);
+        pe.canales.push(canal)
       }
 
-      content.push(pe);
+      content.push(pe)
     }
 
-    return content;
+    return content
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
 function getHour(hora) {
   // Crear objeto Date con la hora en formato de 24 horas
-  let fecha = new Date(`2000/01/01 ${hora}`);
+  let fecha = new Date(`2000/01/01 ${hora}`)
   // Obtener la diferencia horaria entre España y Perú en minutos
-  let diferenciaHoraria = -360;
+  let diferenciaHoraria = -360
   // Sumar la diferencia horaria a la hora en España
-  fecha.setMinutes(fecha.getMinutes() + diferenciaHoraria);
+  fecha.setMinutes(fecha.getMinutes() + diferenciaHoraria)
   // Convertir la hora a formato de 12 horas
-  let horaPeru = fecha.toLocaleString("en-US", {
-    hour: "numeric",
+  let horaPeru = fecha.toLocaleString('en-US', {
+    hour: 'numeric',
     hour12: true,
-    minute: "numeric",
-  });
+    minute: 'numeric'
+  })
   // Retornar la hora en formato peruano de 12 horas
-  return horaPeru;
+  return horaPeru
 }
 
 async function streamUrl(link) {
   try {
-    const response = await axios.get(link);
-    const $ = cheerio.load(response.data);
-    console.log($("iframe").attr("src"));
-    return $("iframe").attr("src");
+    const response = await axios.get(link)
+    const $ = cheerio.load(response.data)
+    console.log($('iframe').attr('src'))
+    return $('iframe').attr('src')
   } catch (error) {
-    return "";
+    return ''
   }
 }
 
@@ -414,5 +414,5 @@ module.exports = {
   consultaBvb,
   leaderboardBL,
   fixtureBL,
-  schedule,
-};
+  schedule
+}
