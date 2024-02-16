@@ -25,7 +25,7 @@ const sendEmail = async (req, res) => {
     service: "gmail",
     auth: {
       user: "lexzum10@gmail.com",
-      pass: "iugwigicuwqwwwzk",
+      pass: "ywcw gubq mold qcwe",
     },
   });
 
