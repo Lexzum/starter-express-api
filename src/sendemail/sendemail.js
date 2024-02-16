@@ -1,21 +1,21 @@
 const sendEmail = async (req, res) => {
-  const { asunto, contenido } = req.body;
+  const { asunto, contenido } = req.body
 
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: 'smtp.gmail.com',
     port: 587,
     auth: {
-      user: "lexzum10@gmail.com",
-      pass: "iugwigicuwqwwwzk",
-    },
-  });
+      user: 'lexzum10@gmail.com',
+      pass: 'ywcw gubq mold qcwe'
+    }
+  })
 
   const info = await transporter.sendMail({
-    from: "lexzum10@gmail.com",
-    to: "lexzum10@gmail.com",
+    from: 'lexzum10@gmail.com',
+    to: 'lexzum10@gmail.com',
     subject: asunto,
-    text: contenido,
-  });
+    text: contenido
+  })
 
-  console.log("Message sent: %s", info.messageId);
-};
+  console.log('Message sent: %s', info.messageId)
+}
